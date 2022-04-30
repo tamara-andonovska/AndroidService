@@ -4,6 +4,7 @@
 
 package uk.ac.shef.oak.jobserviceexample;
 
+import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -11,12 +12,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import uk.ac.shef.oak.jobserviceexample.restarter.RestartServiceBroadcastReceiver;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
+        //finish(); //crashnuvase koga stavav finish() ovde
     }
 
     @Override
@@ -28,5 +30,6 @@ public class MainActivity extends AppCompatActivity {
             ProcessMainClass bck = new ProcessMainClass();
             bck.launchService(getApplicationContext());
         }
+        finish();
     }
 }
