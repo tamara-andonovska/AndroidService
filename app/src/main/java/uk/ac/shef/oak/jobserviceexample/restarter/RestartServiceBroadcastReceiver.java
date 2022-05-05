@@ -77,7 +77,8 @@ public class RestartServiceBroadcastReceiver extends BroadcastReceiver {
                 // setOverrideDeadline runs it immediately - you must have at least one constraint
                 // https://stackoverflow.com/questions/51064731/firing-jobservice-without-constraints
                 .setOverrideDeadline(0)
-                .setPersisted(true).build();
+                .setPersisted(true)
+                .build();
         jobScheduler.schedule(jobInfo);
     }
 
