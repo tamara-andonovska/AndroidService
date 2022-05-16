@@ -67,18 +67,17 @@ public class RESTget extends AsyncTask<Void, Void, Void> {
 
                         //PROBLEMOT E SO PING COMMAND
                         //-c (administrative privileges) i -s (value od 1-4, ne moze 100 iako mi trebaat 100 bytes)
-                        pingCmd = "ping -i " + jobPeriod + " " + host;
+                        pingCmd = "ping " + host;
 
                         Process p = r.exec(pingCmd);
                         BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
                         String inputLine;
                         while ((inputLine = in.readLine()) != null){
                             pingRes += inputLine;
-                            Log.d(CUSTOM, inputLine);
+                            Log.d(CUSTOM, inputLine); //tuka vrti bez prestan
+                            break; //zatoa e staven break iako ne e okej
                         }
-                        Log.d(CUSTOM, "tuka"+pingRes); //ovde go nemam cel pingRes
-                        pingRes = "PING 172.217.169.164 (172.217.169.164) 56(84) bytes of data.\n" +
-                                "64 bytes from 172.217.169.164: icmp_seq=1 ttl=57 time=47.0 ms";
+                        Log.d(CUSTOM, pingRes);
                         NetworkUtils.sendInfo(pingRes);
                         in.close();
                     } catch (IOException e){
@@ -88,7 +87,7 @@ public class RESTget extends AsyncTask<Void, Void, Void> {
                 } catch (JSONException e){
                     e.printStackTrace();
                 }
-                Log.d(CUSTOM, obj.toString());
+                //Log.d(CUSTOM, obj.toString());
             }
 
         } catch (JSONException e) {

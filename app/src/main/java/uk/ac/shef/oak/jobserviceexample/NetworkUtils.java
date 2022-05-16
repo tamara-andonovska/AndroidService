@@ -67,7 +67,7 @@ public class NetworkUtils {
         return responseJSONString;
     }
 
-    public static void sendInfo(String jsonInputString) throws IOException{
+    public static void sendInfo(String res) throws IOException{
         Log.d(CUSTOM, "in sendInfo"); //voopsto ne vleguva ovde??
         URL url = new URL ("http://192.168.100.137:5000/postresults");
 
@@ -84,6 +84,8 @@ public class NetworkUtils {
         //JSON String need to be constructed for the specific resource.
         //We may construct complex JSON using any third-party JSON libraries such as jackson or org.json
         //String jsonInputString = "{\"name\": \"Upendra\", \"job\": \"Programmer\"}";
+
+        String jsonInputString = "{\"result\": \"" + res + "\"}";
 
         try(OutputStream os = con.getOutputStream()){
             byte[] input = jsonInputString.getBytes("utf-8");
