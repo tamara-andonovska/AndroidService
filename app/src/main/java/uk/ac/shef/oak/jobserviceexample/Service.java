@@ -5,12 +5,16 @@
 package uk.ac.shef.oak.jobserviceexample;
 
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -23,6 +27,8 @@ public class Service extends android.app.Service {
     private static String TAG = "Service";
     private static Service mCurrentService;
     private int counter = 0;
+    private JobScheduler mScheduler;
+    private static final int JOB_ID = 0;
 
     public Service() {
         super();
@@ -138,8 +144,8 @@ public class Service extends android.app.Service {
     long oldTime = 0;
 
     public void startTimer() {
-        Log.i(TAG, "Starting timer");
-        Log.d(CUSTOM, "Starting timer");
+        //Log.i(TAG, "Starting timer");
+        //Log.d(CUSTOM, "Starting timer");
 
         //set a new Timer - if one is already running, cancel it to avoid two running at the same time
         stoptimertask();
@@ -151,21 +157,37 @@ public class Service extends android.app.Service {
         Log.i(TAG, "Scheduling...");
         Log.d(CUSTOM, "Scheduling...");
         //schedule the timer, to wake up every 1 second
-        timer.schedule(timerTask, 1000, 1000); //
+        timer.schedule(timerTask, 1000, 10*60*1000); //period smenet za da e na 10min
     }
 
     /**
      * it sets the timer to print the counter every x seconds
      */
     public void initializeTimerTask() {
-        Log.i(TAG, "initialising TimerTask");
-        Log.d(CUSTOM, "initialising TimerTask");
+        //Log.i(TAG, "initialising TimerTask");
+        //Log.d(CUSTOM, "initialising TimerTask");
         timerTask = new TimerTask() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             public void run() {
-                Log.i("in timer", "in timer ++++  " + (counter++));
-                Log.d(CUSTOM, "in timer ++++  " + (counter));
+                scheduleJob();
+                //Log.i("in timer", "in timer ++++  " + (counter++));
+                //Log.d(CUSTOM, "in timer ++++  " + (counter));
             }
         };
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void scheduleJob() {
+        Log.d(CUSTOM, "Se povika scheduleJob");
+        mScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+
+        int selectedNetworkOption = JobInfo.NETWORK_TYPE_ANY;
+        ComponentName serviceName = new ComponentName(getPackageName(), NotificationJobService.class.getName());
+        JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, serviceName)
+                .setRequiredNetworkType(selectedNetworkOption);
+        JobInfo myJobInfo = builder.build();
+        mScheduler.schedule(myJobInfo);
+        Log.d(CUSTOM, "Job scheduled");
     }
 
     /**
